@@ -39,7 +39,13 @@ export default defineConfig({
     // Worktree `node_modules` is a symlink into the main checkout; Vite's
     // default fs.allow is the worktree root and 403s the ORT wasm fetch.
     fs: {
-      allow: [root, ...(nodeModulesReal ? [nodeModulesReal] : [])],
+      // `@tilawa/core` lives outside this folder; its bundled JSON (the
+      // structural look-alike index) is dynamically imported by the worker.
+      allow: [
+        root,
+        path.resolve(root, "../../packages/core"),
+        ...(nodeModulesReal ? [nodeModulesReal] : []),
+      ],
     },
   },
 });
